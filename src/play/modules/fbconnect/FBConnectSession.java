@@ -1,12 +1,11 @@
 package play.modules.fbconnect;
 
-import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 import play.Play;
 import play.exceptions.UnexpectedException;
 import play.libs.WS;
-import play.libs.WS.WSRequest;
-import play.mvc.Http;
 import play.mvc.Router;
 
 public class FBConnectSession {
@@ -33,20 +32,35 @@ public class FBConnectSession {
     }
     
 	public String getLoginUrl() {
-		return getLoginUrl("email");
+		return getLoginUrl("email" , null);
 	}
 
-    public String getLoginUrl(String scope){
-        String url = String.format("https://www.facebook.com/dialog/oauth?client_id=%s&display=%s&redirect_uri=%s", WS.encode(id), WS.encode("page"), WS.encode(Router.getFullUrl("FBConnect.callback")));
-        if(scope != null){
-            url += "&scope="+WS.encode(scope);
-        }
-        return url;
+  public String getLoginUrl(String scope, String tagUrl)
+  {
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put("extra", tagUrl);
+    String url = String.format("https://www.facebook.com/dialog/oauth?" +
+    		"client_id=%s&display=%s&redirect_uri=%s", 
+    		WS.encode(id), 
+    		WS.encode("page"), 
+    		WS.encode(Router.getFullUrl("FBConnect.callback", map)));
+    if (scope != null)
+    {
+      url += "&scope=" + WS.encode(scope);
     }
-    
-    public String getAuthUrl(String authCode){
-        return String.format("https://graph.facebook.com/oauth/access_token?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s", WS.encode(id), WS.encode(Router.getFullUrl("FBConnect.callback")), WS.encode(secret), WS.encode(authCode));
-    }
+    return url;
+  }
+
+  public String getAuthUrl(String authCode , String extra)
+  {
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put("extra", extra);
+    return String.format("https://graph.facebook.com/oauth/access_token?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s", 
+        WS.encode(id), 
+        WS.encode(Router.getFullUrl("FBConnect.callback" , map)), 
+        WS.encode(secret), 
+        WS.encode(authCode));
+  }
     
     public void init(){
         if(!Play.configuration.containsKey("fbconnect.id")) {

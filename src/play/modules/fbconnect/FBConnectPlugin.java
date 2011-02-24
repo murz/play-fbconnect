@@ -1,10 +1,6 @@
 package play.modules.fbconnect;
 
-import javax.naming.ConfigurationException;
-
-import play.Play;
 import play.PlayPlugin;
-import play.exceptions.UnexpectedException;
 import play.mvc.Router;
 
 public class FBConnectPlugin extends PlayPlugin {
