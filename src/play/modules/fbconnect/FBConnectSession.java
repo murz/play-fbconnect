@@ -51,10 +51,8 @@ public class FBConnectSession {
     return url;
   }
 
-  public String getAuthUrl(String authCode , String extra)
+  public String getAuthUrl(String authCode , Map<String, Object> map)
   {
-    Map<String, Object> map = new HashMap<String, Object>();
-    map.put("extra", extra);
     return String.format("https://graph.facebook.com/oauth/access_token?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s", 
         WS.encode(id), 
         WS.encode(Router.getFullUrl("FBConnect.callback" , map)), 

@@ -5,7 +5,6 @@ import groovy.lang.Closure;
 import java.io.PrintWriter;
 import java.util.Map;
 
-import play.Logger;
 import play.Play;
 import play.modules.fbconnect.FBConnectPlugin;
 import play.mvc.Http.Request;
@@ -25,9 +24,7 @@ public class FBConnectTags extends FastTags
     String className = classArg != null ? classArg.toString() : "play-fbconnect-button";
     String scope = scopeArg != null ? scopeArg.toString() : null;
     
-    //String referer = Request.current().headers.get("referer").value();
     String tagUrl = Request.current().url;
-    Logger.info("tagUrl = %s " , tagUrl);
     
     String url = Play.plugin(FBConnectPlugin.class).session().getLoginUrl(scope , tagUrl);
     out.println("<a href='" + url + "' class='" + className + "'>" + label + "</a>");
