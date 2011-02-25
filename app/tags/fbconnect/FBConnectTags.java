@@ -3,6 +3,7 @@ package tags.fbconnect;
 import groovy.lang.Closure;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Map;
 
 import play.Play;
@@ -24,9 +25,16 @@ public class FBConnectTags extends FastTags
     String className = classArg != null ? classArg.toString() : "play-fbconnect-button";
     String scope = scopeArg != null ? scopeArg.toString() : null;
     
-    String tagUrl = Request.current().url;
+    //String tagUrl = Request.current().url;
+    Map<String , Object> extraMap = new HashMap<String , Object>();
+    args.remove("label");
+    args.remove("cssClass");
+    args.remove("scope");
+    for(Object key : args.keySet())
+      extraMap.put(key.toString() , args.get(key));
     
-    String url = Play.plugin(FBConnectPlugin.class).session().getLoginUrl(scope , tagUrl);
+    String url = Play.plugin(FBConnectPlugin.class).session().getLoginUrl(scope , extraMap);
+    
     out.println("<a href='" + url + "' class='" + className + "'>" + label + "</a>");
     Request.current().headers.get("refer");
 

@@ -1,6 +1,5 @@
 package play.modules.fbconnect;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import play.Play;
@@ -35,15 +34,13 @@ public class FBConnectSession {
 		return getLoginUrl("email" , null);
 	}
 
-  public String getLoginUrl(String scope, String tagUrl)
+  public String getLoginUrl(String scope, Map<String , Object> extraMap)
   {
-    Map<String, Object> map = new HashMap<String, Object>();
-    map.put("extra", tagUrl);
     String url = String.format("https://www.facebook.com/dialog/oauth?" +
     		"client_id=%s&display=%s&redirect_uri=%s", 
     		WS.encode(id), 
     		WS.encode("page"), 
-    		WS.encode(Router.getFullUrl("FBConnect.callback", map)));
+    		WS.encode(Router.getFullUrl("FBConnect.callback", extraMap)));
     if (scope != null)
     {
       url += "&scope=" + WS.encode(scope);
